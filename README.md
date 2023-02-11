@@ -1,3 +1,3 @@
-# Random Solutions
+# Coursera Solutions
 
 ### this repo contains solutions to my coursera courses.
