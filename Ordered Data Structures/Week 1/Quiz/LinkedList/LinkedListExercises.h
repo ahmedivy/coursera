@@ -7,7 +7,7 @@
  *
  * @author Eric Huber - University of Illinois staff
  *
-**/
+ **/
 
 /********************************************************************
   Week 1: Linked List and Merge Sort Exercises
@@ -79,61 +79,112 @@
  ********************************************************************/
 
 template <typename T>
-void LinkedList<T>::insertOrdered(const T& newData) {
+void LinkedList<T>::insertOrdered(const T &newData)
+{
 
-  // -----------------------------------------------------------
-  // TODO: Your code here!
+   // -----------------------------------------------------------
+   // TODO: Your code here
 
-  T *newNode = new T(newData);
+   Node *newNode = new Node(newData);
+   Node *tmp = head_;
 
-  
+   // If list is empty, means there is NULL at the head_
+   if (head_ == NULL)
+   {
+      head_ = newNode;
+      tail_ = newNode;
+      // We can skip both lines below , bcz they already points to NULL
+      // But I am writing for simplicity
+      newNode->prev = NULL;
+      newNode->next = NULL;
+   }
+   // If the first item of sorted list is greater than newData
+   // to be added, means newData is less than minimum of list.
+   // Then, we have to simly prepend it to the list.
+   else if (head_->data >= newData)
+   {
+      newNode->next = head_;
+      newNode->prev = NULL; // Can be skipped
+      head_->prev = newNode;
+      head_ = newNode;
+   }
+   // If the last item of sorted list is less than newData to
+   // be added, means newData is greater than maximum of list.
+   // The, we have to append the newData to the list.
+   else if (tail_->data <= newData)
+   {
+      newNode->prev = tail_;
+      newNode->next = NULL;  // Can be skipped
+      tail_->next = newNode;
+      tail_ = newNode; 
+   }
+   // Else in other cases we have to loop over the list from
+   // ptr to ptr to find the right place to put the newNode
+   else
+   {
+      while(tmp)
+      {
+         if (tmp->data < newData)
+         {
+            newNode->next = tmp;
+            newNode->prev = tmp->prev;
+            (tmp->prev)->next = newNode;
+            tmp->prev = newNode;
+
+            break;
+         }
+         tmp = tmp->next;
+      }
+   }
+
+   // Increment size
+   size_++;
 
 
-  // -----------------------------------------------------------
-  // Please implement this function according to the description
-  // above and in the instructions PDF.
+   // -----------------------------------------------------------
+   // Please implement this function according to the description
+   // above and in the instructions PDF.
 
-  // Hints:
-  // Make your new node on the heap and then find where it needs to
-  // go in the list. A good way to do this is by considering special
-  // base cases first, then walk the list from front to back and find
-  // the earliest position where you should insert the new node.
-  
-  // When you insert the node, make sure to update any and all pointers
-  // between it and adjacent nodes accordingly (next and prev pointers).
-  // You may also need to update the head_ and tail_ pointers in some
-  // cases. Also update the size_ variable of the list.
+   // Hints:
+   // Make your new node on the heap and then find where it needs to
+   // go in the list. A good way to do this is by considering special
+   // base cases first, then walk the list from front to back and find
+   // the earliest position where you should insert the new node.
 
-  // There are explicit examples of how to do all those things in the
-  // other provided code for this project!
+   // When you insert the node, make sure to update any and all pointers
+   // between it and adjacent nodes accordingly (next and prev pointers).
+   // You may also need to update the head_ and tail_ pointers in some
+   // cases. Also update the size_ variable of the list.
 
-  // More hints:
-  
-  // First, practice your technique for traversing the list from front
-  // to back. You can see examples of several ways to do this throughout
-  // the provided code for this project. We recommend that you try using
-  // a temporary pointer that you update to track your position as you
-  // traverse from node to node.
-  
-  // Consider all the cases that can happen when you're trying to insert
-  // the new node. Is the list currently empty? Does the new node go
-  // at the beginning? Does it go somewhere in the middle? Does it go
-  // at the end? Remember that this is a doubly-linked list, so there
-  // may be prev and next pointers to adjust on both sides of the node
-  // that you insert.
+   // There are explicit examples of how to do all those things in the
+   // other provided code for this project!
 
-  // Be careful to make your conditional cases mutually exclusive when
-  // necessary. Are you using "else" where you should?
+   // More hints:
 
-  // Don't dereference a null pointer, ever! Always make sure the logic
-  // checks for that before dereferencing. This is the most common cause
-  // of crashes. The test program will show you which test cases are
-  // causing you issues with that. A common issue is that when students
-  // traverse an empty list or when they traverse to the end of the list,
-  // they don't handle the null pointer at the tail properly. Be careful
-  // to update all next, prev, head_, and tail_ pointers as needed on your
-  // new node or on those existing nodes that are adjacent to the new node.
+   // First, practice your technique for traversing the list from front
+   // to back. You can see examples of several ways to do this throughout
+   // the provided code for this project. We recommend that you try using
+   // a temporary pointer that you update to track your position as you
+   // traverse from node to node.
 
+   // Consider all the cases that can happen when you're trying to insert
+   // the new node. Is the list currently empty? Does the new node go
+   // at the beginning? Does it go somewhere in the middle? Does it go
+   // at the end? Remember that this is a doubly-linked list, so there
+   // may be prev and next pointers to adjust on both sides of the node
+   // that you insert.
+
+   // Be careful to make your conditional cases mutually exclusive when
+   // necessary. Are you using "else" where you should?
+
+   // Don't dereference a null pointer, ever! Always make sure the logic
+   // checks for that before dereferencing. This is the most common cause
+   // of crashes. The test program will show you which test cases are
+   // causing you issues with that. A common issue is that when students
+   // traverse an empty list or when they traverse to the end of the list,
+   // they don't handle the null pointer at the tail properly. Be careful
+   // to update all next, prev, head_, and tail_ pointers as needed on your
+   // new node or on those existing nodes that are adjacent to the new node.
 }
 
 /********************************************************************
@@ -190,7 +241,7 @@ void LinkedList<T>::insertOrdered(const T& newData) {
   A correct implementation of this function has O(n) time complexity
   for a list of length n. That is, in the worst case, you would
   traverse each element of the list some constant number of times.
-  
+
   Important notes for getting the correct running time:
 
   1. Since both lists being merged are already sorted themselves, there
@@ -209,56 +260,56 @@ void LinkedList<T>::insertOrdered(const T& newData) {
  ********************************************************************/
 
 template <typename T>
-LinkedList<T> LinkedList<T>::merge(const LinkedList<T>& other) const {
+LinkedList<T> LinkedList<T>::merge(const LinkedList<T> &other) const
+{
 
-  // You can't edit the original instance of LinkedList that is calling
-  // merge because the function is marked const, and the "other" input
-  // list is also marked const. However, here we'll make some convenient
-  // "working copies" of the two lists: "*this" refers to the current
-  // list object instance that is calling the merge member function, and
-  // "other" refers to the list that was passed as an argument:
-  LinkedList<T> left = *this;
-  LinkedList<T> right = other;
+   // You can't edit the original instance of LinkedList that is calling
+   // merge because the function is marked const, and the "other" input
+   // list is also marked const. However, here we'll make some convenient
+   // "working copies" of the two lists: "*this" refers to the current
+   // list object instance that is calling the merge member function, and
+   // "other" refers to the list that was passed as an argument:
+   LinkedList<T> left = *this;
+   LinkedList<T> right = other;
 
-  // So if this function was called as "A.merge(B)", then now, "left"
-  // is a temporary copy of the "A" and "right" is a temporary copy
-  // of the "B".
-  
-  // We will also create an empty list called "merged" where we can build
-  // the final result we want. This is what we will return at the end of
-  // the function.
-  LinkedList<T> merged;
+   // So if this function was called as "A.merge(B)", then now, "left"
+   // is a temporary copy of the "A" and "right" is a temporary copy
+   // of the "B".
 
-  // -----------------------------------------------------------
-  // TODO: Your code here!
-  // -----------------------------------------------------------
-  // Please implement this function according to the description
-  // above and in the instructions PDF.
+   // We will also create an empty list called "merged" where we can build
+   // the final result we want. This is what we will return at the end of
+   // the function.
+   LinkedList<T> merged;
 
-  // Hints:
-  // 1. Assuming that the left and right lists are already sorted, remember
-  //    that the smallest items are already available at the front. You can
-  //    access them immediately.
-  // 2. Think of which item needs to be placed first in the merged list.
-  //    Then think about what item should be placed second. You need to
-  //    think carefully about which list to take from next after you take
-  //    each single item.
-  // 3. You can do this while walking down the left and right lists exactly
-  //    once. Do not loop over the lists multiple times. If you are doing
-  //    that, your implementation is probably already running in O(n^2)
-  //    time or worse, and not O(n).
-  // 4. Remember, DO NOT try to use insertOrdered here. That would be
-  //    very slow.
+   // -----------------------------------------------------------
+   // TODO: Your code here!
+   // -----------------------------------------------------------
+   // Please implement this function according to the description
+   // above and in the instructions PDF.
 
-  // -----------------------------------------------------------
+   // Hints:
+   // 1. Assuming that the left and right lists are already sorted, remember
+   //    that the smallest items are already available at the front. You can
+   //    access them immediately.
+   // 2. Think of which item needs to be placed first in the merged list.
+   //    Then think about what item should be placed second. You need to
+   //    think carefully about which list to take from next after you take
+   //    each single item.
+   // 3. You can do this while walking down the left and right lists exactly
+   //    once. Do not loop over the lists multiple times. If you are doing
+   //    that, your implementation is probably already running in O(n^2)
+   //    time or worse, and not O(n).
+   // 4. Remember, DO NOT try to use insertOrdered here. That would be
+   //    very slow.
 
-  // We return the merged list by value here. It may be copied out of the
-  // function, but usually the compiler will optimize this to automatically
-  // create it directly in the correct memory space outside without copying.
-  // Don't worry about the speed of that right now. (By the way, did you
-  // notice that all of our nodes are created on the heap? The part of the
-  // list that we pass back is really small; it just contains two pointers
-  // and an int.)
-  return merged;
+   // -----------------------------------------------------------
+
+   // We return the merged list by value here. It may be copied out of the
+   // function, but usually the compiler will optimize this to automatically
+   // create it directly in the correct memory space outside without copying.
+   // Don't worry about the speed of that right now. (By the way, did you
+   // notice that all of our nodes are created on the heap? The part of the
+   // list that we pass back is really small; it just contains two pointers
+   // and an int.)
+   return merged;
 }
-
