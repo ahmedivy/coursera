@@ -83,6 +83,12 @@ void LinkedList<T>::insertOrdered(const T& newData) {
 
   // -----------------------------------------------------------
   // TODO: Your code here!
+
+  T *newNode = new T(newData);
+
+  
+
+
   // -----------------------------------------------------------
   // Please implement this function according to the description
   // above and in the instructions PDF.
