@@ -86,59 +86,39 @@ void LinkedList<T>::insertOrdered(const T &newData)
    // TODO: Your code here
 
    Node *newNode = new Node(newData);
-   Node *tmp = head_;
-
-   // If list is empty, means there is NULL at the head_
-   if (head_ == NULL)
+   Node *current = head_;
+   while (current != nullptr && current->data < newData)
    {
-      head_ = newNode;
-      tail_ = newNode;
-      // We can skip both lines below , bcz they already points to NULL
-      // But I am writing for simplicity
-      newNode->prev = NULL;
-      newNode->next = NULL;
+      current = current->next;
    }
-   // If the first item of sorted list is greater than newData
-   // to be added, means newData is less than minimum of list.
-   // Then, we have to simly prepend it to the list.
-   else if (head_->data >= newData)
-   {
-      newNode->next = head_;
-      newNode->prev = NULL; // Can be skipped
-      head_->prev = newNode;
-      head_ = newNode;
-   }
-   // If the last item of sorted list is less than newData to
-   // be added, means newData is greater than maximum of list.
-   // The, we have to append the newData to the list.
-   else if (tail_->data <= newData)
-   {
+   if (current == nullptr)
+   { // insert at the back
       newNode->prev = tail_;
-      newNode->next = NULL;  // Can be skipped
-      tail_->next = newNode;
-      tail_ = newNode; 
-   }
-   // Else in other cases we have to loop over the list from
-   // ptr to ptr to find the right place to put the newNode
-   else
-   {
-      while(tmp)
+      if (tail_ != nullptr)
       {
-         if (tmp->data < newData)
-         {
-            newNode->next = tmp;
-            newNode->prev = tmp->prev;
-            (tmp->prev)->next = newNode;
-            tmp->prev = newNode;
-
-            break;
-         }
-         tmp = tmp->next;
+         tail_->next = newNode;
+      }
+      tail_ = newNode;
+      if (head_ == nullptr)
+      { // empty list
+         head_ = tail_;
       }
    }
-
-   // Increment size
-   size_++;
+   else
+   { // insert before current
+      newNode->prev = current->prev;
+      newNode->next = current;
+      if (current->prev != nullptr)
+      {
+         current->prev->next = newNode;
+      }
+      else
+      { // insert at the front
+         head_ = newNode;
+      }
+      current->prev = newNode;
+   }
+   ++size_;
 
 
    // -----------------------------------------------------------
@@ -283,6 +263,42 @@ LinkedList<T> LinkedList<T>::merge(const LinkedList<T> &other) const
 
    // -----------------------------------------------------------
    // TODO: Your code here!
+
+   Node *leftNode = left.head_;
+   Node *rightNode = right.head_;
+
+   while (leftNode && rightNode)
+   {
+      if (leftNode->data < rightNode->data)
+      {
+         merged.pushBack(leftNode->data);
+         leftNode = leftNode->next;
+      }
+      else if (leftNode->data > rightNode->data)
+      {
+         merged.pushBack(rightNode->data);
+         rightNode = rightNode->next;
+      }
+      else
+      {
+         merged.pushBack(rightNode->data);
+         rightNode = rightNode->next;
+         merged.pushBack(leftNode->data);
+         leftNode = leftNode->next;
+      }
+   }
+
+   while (leftNode)
+   {
+      merged.pushBack(leftNode->data);
+      leftNode = leftNode->next;
+   }
+   while (rightNode)
+   {
+      merged.pushBack(rightNode->data);
+      rightNode = rightNode->next;
+   }
+
    // -----------------------------------------------------------
    // Please implement this function according to the description
    // above and in the instructions PDF.
